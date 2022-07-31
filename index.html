@@ -1,0 +1,125 @@
+<html>
+
+<head>
+    <title>Airplane</title>
+</head>
+
+<body>
+    <style type="text/css">
+        #space {
+            background-image: url("space.jpeg");
+            width: 1040px;
+            height: 760px;
+        }
+        .player {
+            position: absolute;
+            background-image: url("airship.png");
+            width: 70px;
+            height:75px;
+        }
+        .enemies {
+            position: absolute;
+            background-image: url("ufo.png");
+            width: 70px;
+            height:75px;
+        }
+        .missile {
+            position: absolute;
+            background-color:lawngreen;
+            width: 20px;
+            height:10px;
+        }
+    </style>
+    <div id="space">
+        <div id="players"></div>
+        <div id="enemies"></div>
+        <div id="missiles"></div>
+    </div>
+    <script type="text/javascript">
+        var player = {
+            left: 450,
+            top: 600
+        }
+        var enemies =[
+            {left: 350, top: 50 },
+            {left: 450, top: 100 },
+            {left: 550, top: 150 },
+            {left: 250, top: 200 },
+            {left: 650, top: 250 },
+            {left: 150, top: 200 }
+        ]
+        var missiles = []
+        function drawPlayer(){
+            content = "<div class='player' style='left:" + player.left + "px; top: " + player.top + "px'></div>";
+            document.getElementById("players").innerHTML = content; 
+        }
+        function randomUfo(){
+            var ufo = Math.floor(Math.random() *  800)
+            return ufo
+        }
+        function drawEnemies(){
+            content = "";
+            for( var i = 0; i < enemies.length; i++){
+                if (enemies[i].top < 350){
+                    content += "<div class='enemies' style='left: " + enemies[i].left + "px; top: " + enemies[i].top  + "px'></div>";
+                } else { enemies[i] = { left: randomUfo(), top: 0}}
+            }
+            document.getElementById("enemies").innerHTML = content;
+        }
+        function drawMissiles(){
+            content = "";
+            for (var i = 0; i < missiles.length; i++) {
+                content += "<div class='missile' style='left:" + missiles[i].left + "px; top: " + missiles[i].top + "px'></div>";
+            }
+            document.getElementById("missiles").innerHTML = content;
+        }
+        function moveEnemies() {
+            for ( var x=0; x < enemies.length; x++){
+                enemies[x].top += 1;
+            }
+        }
+        function moveMissiles() {
+            for (var i = 0; i < missiles.length; i++) {
+                missiles[i].top -= 15 ;
+            }
+        }
+        document.onkeydown = function (e) {
+            if(e.keyCode == 37) {
+                if (player.left > 10) {
+                    player.left -= 10;
+                }
+            }
+            if (e.keyCode == 39) {
+                if (player.left < 920) {
+                    player.left += 10;
+                }
+            }
+            if (e.keyCode ===38) {
+                if (player.top > 470) {
+                    player.top -= 10;
+                }
+            }
+            if (e.keyCode == 40) {
+                if (player.top < 670) {
+                    player.top += 10;
+                }
+            }
+            if (e.keyCode == 32) {
+                missiles.push({left: player.left + 26, top: player.top });
+                drawMissiles();
+            }
+            drawPlayer();
+        }
+        function gameLoop() {
+            moveEnemies();
+            moveMissiles();
+            drawPlayer();
+            drawEnemies();
+            drawMissiles();
+            setTimeout(gameLoop,  2);
+        }
+        gameLoop();
+    </script>
+
+</body>
+</html>
